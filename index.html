@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang = "en"
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #map {
+            height: 600px;
+        }
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dash of Data</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Our own CSS stylesheet -->
+    <!-- <link rel="stylesheet" href="styles.css" media="screen"> -->
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>    
+</head>
+
+<body id = "custom-bg">
+Test
+    <div class = "container">
+        <div class = "row">
+            <div class = "col-xs-12 jumbotron text-center">
+                <h1>Weather or Not: Shedding Light on 2021 State Accidents with a Dash of Data</h1>
+                <p id="text">Select the state with the dropdown, and filters in the map.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="well text-center">
+                    <h4>State</h4>
+                    <!-- "newState" was name of function to detect when a new selection was made in the dropbox, we can adapt for when new selection of state, weather, or lighting-->
+                    <select id="selDataset1" onchange="newState(this.value)"></select>
+                    <p>Population Estimate 2021:</p>
+                    <strong><span id = "popEst"></span></strong>
+                </div>
+            </div>
+            <!--Chart and info here-->
+            <div class="col-xs-8">
+                <div class = "well text-center">
+                    <h4># of Accidents in Certain Lighting in <strong><span id = "stateName"></span></strong></h4>
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-xs-12" style="height: 400 px;">
+                Map goes here
+                <div id = "map"></div>
+                and ends here
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-xs-12" style = "height: 200 px;"></div>
+        </div>
+    </div>
+    <!--Scripts will be placed below, can be commented out-->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="ed-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mojs/core"></script>
+    <script src="lb-app.js"></script>
+</body>
