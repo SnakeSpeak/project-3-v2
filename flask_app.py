@@ -37,6 +37,7 @@ def welcome():
         f"/api/v1.0/lighting_conditions<br>"
         f"/api/v1.0/weather_conditions<br>"
         f"/api/v1.0/accident_type<br>"
+        f"/api/v1.0/population<br>"
         )
 
 
@@ -137,6 +138,37 @@ def accident_call():
     
     # Jsonify the output
     return jsonify(accident_list)
+
+
+
+@app.route("/api/v1.0/population")
+def population_call():
+    session = Session(engine)
+
+    # Query returning date and precipitation date from measurement table
+    # Filtered for date occuring on and after query date  
+    population_results = session.query(population.NAME, population.POPESTIMATE2021).all()
+        
+    # Close session
+    session.close
+
+    # Open empty precipitation list to record output
+    population_list = []
+
+    # For loop through the query results
+    for NAME, POPESTIMATE2021 in population_results:
+        # Open empty dicitionary
+        population_dict = {}
+
+        # Write output into dictionary
+        population_dict["state"] = NAME
+        population_dict["population"] = POPESTIMATE2021
+
+        # Append dictionary to precipitation list
+        population_list.append(population_dict)
+    
+    # Jsonify the output
+    return jsonify(population_list)
 
 
 if __name__ == '__main__':
