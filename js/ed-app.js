@@ -1,4 +1,4 @@
-const stateData = "gz_2010_us_040_00_500k.json"
+const stateData = "Resources/gz_2010_us_040_00_500k.json"
 const statePop = "est2021pop.csv"
 d3.json(stateData).then(function(data){
     console.log(data);
@@ -73,3 +73,8 @@ function init() {
 function newState(state) {
     displayPop(state);
 };
+
+
+fetch("http://127.0.0.1:5000/api/v1.0/lighting_conditions").then(response => response.json()).then(data => {
+    console.log(data);
+})
