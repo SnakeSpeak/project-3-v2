@@ -1,52 +1,32 @@
 const stateData = "Resources/gz_2010_us_040_00_500k.json"
-const statePop = "est2021pop.csv"
+const statePop = d3.json("http://127.0.0.1:5000/api/v1.0/population")
+
 d3.json(stateData).then(function(data){
     console.log(data);
 });
+
 init();
 
-// Function to convert CSV to JSON
-function csvToJSON(csvData) {
-    let rows = csvData.trim().split('\n');
-    let headers = rows[0].split(',');
-    let jsonData = [];
-
-    for (let i = 1; i < rows.length; i++) {
-        let values = rows[i].split(',');
-        let entry = {};
-
-        for (let j = 0; j < headers.length; j++) {
-            entry[headers[j].trim()] = values[j].trim();
-        }
-
-        jsonData.push(entry);
-    }
-
-    return jsonData;
-}
+console.log(statePop)
 
 
 function displayPop(state) {
-    // Fetch the CSV file and convert it to JSON
-    fetch('est2021pop.csv')
-        .then(response => response.text())
-        .then(csvData => {
-            // Convert CSV to JSON
-            let jsonData = csvToJSON(csvData);
-
-            // Log the JSON data to the console
-            console.log(jsonData);
-            let value = jsonData.filter(result => result.NAME == state);
-            let name = value[0].NAME
-            let statePop = value[0].POPESTIMATE2021
-            console.log(statePop)
-            const popEstElement = document.getElementById('popEst');
-            const stateNameElement = document.getElementById('stateName');
-            popEstElement.textContent = statePop.toLocaleString();
-            stateNameElement.textContent = name.toLocaleString();
-            })
-
-    }
+    //parse out api data
+    d3.json("http://127.0.0.1:5000/api/v1.0/population")
+    .then(data => {
+        console.log(data)
+        //filter to only see selected state data
+        let value = data.filter(result => result.state == state);
+        let statePop = value[0].population
+        let name = value[0].state
+        console.log(statePop)
+        //adjust html elements to display population counts and state name
+        const popEstElement = document.getElementById('popEst');
+        const stateNameElement = document.getElementById('stateName');
+        popEstElement.textContent = statePop.toLocaleString();
+        stateNameElement.textContent = name.toLocaleString();
+    })
+}
 
 
 function init() {
@@ -67,14 +47,50 @@ function init() {
         let init_state = stateNames[0];
         console.log(init_state)
         displayPop(init_state)
+        createLightingBarGraph(init_state)
     });
 }
 
 function newState(state) {
     displayPop(state);
+    createLightingBarGraph(state);
 };
 
+function createLightingBarGraph(state) {
+    //parse out api data
+    d3.json("http://127.0.0.1:5000//api/v1.0/lighting_conditions").then((data) => {
+        console.log(data)
+        //filter to only see selected state data
+        let value = data.filter(result => result.state == state)
+        const lightingCounts = {};
+        //increase counts for specific lighting types
+        value.forEach(item => {
+            console.log(item)
+            const lighting = item.lighting_condition;
+            lightingCounts[lighting] = (lightingCounts[lighting] || 0)+1;
+        })
+        //create data for chart
+        const lightingData = 
+            {
+                x: Object.keys(lightingCounts),
+                y: Object.values(lightingCounts),
+                type: 'bar'
+            };
+        //create layout, and slight adjustments for readability
+        const layout = {
+            xaxis: {
+                title: 'Lighting Condition',
+                automargin: true,
+                tickangle: -45
+            },
+            yaxis:{
+                title: 'Count'
+            },
+            width: 800
+        };
+        //plot it out
+        Plotly.newPlot('chart',[lightingData],layout);
+    })
 
-fetch("http://127.0.0.1:5000/api/v1.0/lighting_conditions").then(response => response.json()).then(data => {
-    console.log(data);
-})
+    
+}
