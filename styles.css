@@ -1,1 +1,33 @@
 /* Set map, body, and html to 100% of the screen size. */
+
+.legend {
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #555;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .legend .rain {
+    color: #6495ed;
+  }
+  
+  .legend .clear {
+    color: #ffd700;
+  }
+  
+  .legend .cloudy {
+    color: #000000;
+  }
+  
+  .legend .snow {
+    color: #ff69b4;
+  }
+  
+  .legend .other {
+    color: #808080;
+  }
