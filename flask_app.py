@@ -9,7 +9,7 @@ from flask_cors import CORS
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("sqlite:///SQLiteDatabase/Accidents_2021.db"+'?check_same_thread=False')
+engine = create_engine("sqlite:///SQLiteDatabase/Accidents_2021.db")
 
 # reflect an existing database into a new model
 Base = automap_base()
@@ -115,8 +115,7 @@ def accident_call():
 
     # Query returning date and precipitation date from measurement table
     # Filtered for date occuring on and after query date  
-    accident_results = session.query(accident.STATENAME, accident.LATITUDE, accident.LONGITUD, accident.HARM_EVNAME, population.POPESTIMATE2021, accident.STATE, population.STATE).\
-        filter(accident.STATE == population.STATE).all()
+    accident_results = session.query(accident.STATENAME, accident.LATITUDE, accident.LONGITUD, accident.HARM_EVNAME).all()
         
     # Close session
     session.close
@@ -125,7 +124,7 @@ def accident_call():
     accident_list = []
 
     # For loop through the query results
-    for STATENAME, LATITUDE, LONGITUD, HARM_EVNAME, POPESTIMATE2021, accident.STATE, population.STATE in accident_results:
+    for STATENAME, LATITUDE, LONGITUD, HARM_EVNAME in accident_results:
         # Open empty dicitionary
         accident_dict = {}
 
@@ -134,7 +133,6 @@ def accident_call():
         accident_dict["lat"] = LATITUDE
         accident_dict["lon"] = LONGITUD
         accident_dict["accident_type"] = HARM_EVNAME
-        accident_dict["population"] = POPESTIMATE2021
 
         # Append dictionary to precipitation list
         accident_list.append(accident_dict)
