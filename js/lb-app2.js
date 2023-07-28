@@ -95,7 +95,6 @@ function createWeatherMap(value) {
   };
   // Initialize weatherStatusCode, which will be used as a key to access the appropriate layers, icons, and weather count for the layer group.
   let weatherStatusCode;
-  let markerGroup = L.featureGroup(); 
   let stateOutput = [];
 
   const url2 = "http://127.0.0.1:5000/api/v1.0/weather_conditions";
@@ -140,27 +139,22 @@ function createWeatherMap(value) {
     // Update weather count
     weatherCount[weatherStatusCode]++;
   
-    createMarker(stateOutput[i].lat, stateOutput[i].lon, weatherStatusCode, stateOutput[i].state, stateOutput[i].weather_condition, markerGroup, myMap);
+    let newMarker = L.marker([stateOutput[i].lat, stateOutput[i].lon], {
+      icon: icons[weatherStatusCode]
+    });
+    
+    let popupContent = `<b>State:</b> ${stateOutput[i].state}<br><b>Weather:</b> ${stateOutput[i].weather_condition}<br>`;
+  
+    newMarker.bindPopup(popupContent);
+  
+    newMarker.bindPopup(popupContent);
+  
+    newMarker.addTo(layers[weatherStatusCode]);
   }
   // Update the legend
   updateLegend(weatherCount);
 })};
 
-function createMarker (lat, lon, weatherStatus, state, weatherCondition, markerGroup, myMap) {
-    
-  // create a new marker with appropriate icon and coordinates
-  let newMarker = L.marker([lat, lon], {
-    icon: icons[weatherStatus]
-  });
-  
-  let popupContent = `<b>State:</b> ${state}<br><b>Weather:</b> ${weatherCondition}<br>`;
-
-  newMarker.bindPopup(popupContent);
-
-  newMarker.addTo(markerGroup);
-
-  markerGroup.addTo(myMap);
-}
 
 function updateLegend(weatherCount) {
   document.querySelector(".legend").innerHTML = [
@@ -171,3 +165,9 @@ function updateLegend(weatherCount) {
     "<p class='other'>Other: " + weatherCount.OTHER + "</p>",
   ].join("");
 }
+
+function init(){
+  createWeatherMap("Alabama")
+};
+
+init();

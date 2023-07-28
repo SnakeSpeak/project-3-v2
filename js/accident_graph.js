@@ -14,7 +14,7 @@ function graph(data,value){
     }
   }
 
-  var hashMap = {}
+  let hashMap = {}
 
   output.map(element => {
 // if the key(name) is inserted in our hashmap, just increment the count
@@ -23,7 +23,7 @@ function graph(data,value){
   });
 
 // our count for each name is ready...just getting the result ready in our desired format
-  var aggregatedData =
+  let aggregatedData =
   Object.keys(hashMap).map(element =>
   ({
     accident_type: element,
@@ -51,13 +51,6 @@ function graph(data,value){
 }
 
 
-// d3.json(url).then(function(data){
-  
-
-// })
-
-
-
 function bar_plot(x_value, y_value, state){
   let bar_plot = [{
       x: x_value,
@@ -68,12 +61,13 @@ function bar_plot(x_value, y_value, state){
 
   let bar_layout = {
       width: 800,
-      height: 500,
+      height: 600,
       title: `Top 10 Accident Types in ${state}`
   };
 
   Plotly.newPlot("accident", bar_plot, bar_layout);
 };
+
 
 function init(){
     // Fetching JSON data
@@ -92,10 +86,10 @@ d3.selectAll("#selDataset1").on("change", getData);
 
 // Create function for getData()
 function getData(){
-    // Assign the dropdown menu option to a variable
+    // Assign the dropdown menu option to a letiable
     let dropdownMenu = d3.select("#selDataset1");
 
-    // Assign the value of the dropdown menu option to a variable
+    // Assign the value of the dropdown menu option to a letiable
     let dataset = dropdownMenu.property("value");
 
     // Fetching JSON data
