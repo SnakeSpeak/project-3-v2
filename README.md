@@ -9,3 +9,5 @@ Aggregate count in Javascript:</br>
 https://stackoverflow.com/questions/63331232/how-to-aggregate-json-to-show-a-count-for-each-same-value</br>
 Sorting JavaScript Arrays:</br>
 https://www.w3schools.com/js/js_array_sort.asp</br>
+Granim.js JavaScript Library:</br>
+https://sarcadass.github.io/granim.js/</br>
