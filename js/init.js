@@ -26,4 +26,5 @@ function init() {
 function newState(state) {
     displayPop(state);
     createLightingBarGraph(state);
+    createWeatherMap(state);
 };
