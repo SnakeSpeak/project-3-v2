@@ -60,9 +60,16 @@ function bar_plot(x_value, y_value, state){
   }];
 
   let bar_layout = {
-      width: 800,
-      height: 600,
-      title: `Top 10 Accident Types in ${state}`
+      xaxis: {
+        title: 'Accident Type',
+        automargin: true,
+        tickangle: -45
+      },
+      yaxis: {
+        title: 'Count'
+      },
+      width: 700,
+      height: 400
   };
 
   Plotly.newPlot("accident", bar_plot, bar_layout);

@@ -14,8 +14,10 @@ function displayPop(state) {
         //adjust html elements to display population counts and state name
         const popEstElement = document.getElementById('popEst');
         const stateNameElement = document.getElementById('stateName');
+        const stateName2Element = document.getElementById('stateName2');
         popEstElement.textContent = statePop.toLocaleString();
         stateNameElement.textContent = name.toLocaleString();
+        stateName2Element.textContent = name.toLocaleString();
     })
 }
 
@@ -48,7 +50,8 @@ function createLightingBarGraph(state) {
             yaxis:{
                 title: 'Count'
             },
-            width: 800
+            width: 550,
+            height: 400
         };
         //plot it out
         Plotly.newPlot('chart',[lightingData],layout);

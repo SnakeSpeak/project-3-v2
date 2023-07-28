@@ -55,41 +55,39 @@
 <body id = "custom-bg">
     <div class = "container">
         <div class = "row">
-            <div class = "col-xs-12 jumbotron text-center">
+            <div class = "col-sm-12 jumbotron text-center">
                 <h1>Weather or Not: Shedding Light on 2021 State Accidents with a Dash of Data</h1>
                 <p id="text">Select the state with the dropdown, and filters in the map.</p>
+                <h4>State</h4>
+                <select id="selDataset1" onchange="newState(this.value)"></select>
+                <p>Population Estimate 2021:</p>
+                <strong><span id = "popEst"></span></strong>
+            </div>
+        </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-3">
-                <div class="well text-center">
-                    <h4>State</h4>
-                    <!-- "newState" was name of function to detect when a new selection was made in the dropbox, we can adapt for when new selection of state, weather, or lighting-->
-                    <select id="selDataset1" onchange="newState(this.value)"></select>
-                    <p>Population Estimate 2021:</p>
-                    <strong><span id = "popEst"></span></strong>
-                </div>
-            </div>
-            <!--Chart and info here-->
-            <div class="col-xs-9">
-                <div class = "well text-center">
+            <div class = "col-xs-2"></div>
+            <div class="col-xs-4">
+                <div class = "well text-center align-item-center">
                     <h4># of Accidents in Certain Lighting in <strong><span id = "stateName"></span></strong></h4>
                     <div id = "chart"></div>
                 </div>
             </div>
-        </div>
+            <div class = "col-xs-5" style = "height: 200 px;">
+                <div class="well text-center">
+                    <h4>Frequency of Accident Types in <strong><span id = "stateName2"></span></strong></h4>
+                    <div id = "accident"></div>
+                </div>
+            </div> 
         <div class = "row">
-            <div class = "col-xs-12" style="height: 600 px;">
-                Map goes here
-                <div id = "map"></div>
-                and ends here
+            <div class = "col-xs-12" style="height: 600 px;width: 1200px;">
+                <div class="well text-center">
+                    <div id = "map"></div>
+                </div>
             </div>
         </div>
-        <div class = "row">
-            <div class = "col-xs-12" style = "height: 200 px;"></div>
-            accident type
-            <div id = "accident"></div>
-        </div>
+      </div>
     </div>
     <!--Scripts will be placed below, can be commented out-->
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -101,4 +99,5 @@
     <script src="js/init.js"></script>
     <script src="granim.js-2.0.0/dist/granim.min.js"></script>
     <script src="js/granim_test.js"></script>
+
 </body>
