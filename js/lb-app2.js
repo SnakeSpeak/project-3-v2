@@ -65,7 +65,7 @@ let icons = {
     markerColor: "green"
   }),
   SNOW: L.ExtraMarkers.icon({
-    icon: "ion-snow-outline",
+    icon: "ion-ios-snowy",
     iconColor: "white",
     markerColor: "blue"
   }),
@@ -75,6 +75,7 @@ let icons = {
     markerColor: "white"
   }),
   OTHER: L.ExtraMarkers.icon({
+    icon: "icon ion-ios-circle-filled",
     iconColor: "white",
     markerColor: "black"
   })
