@@ -1,24 +1,22 @@
+// Creating our initial map object:
+// Initialize separate marker cluster groups for each weather layer
+let clearCluster = L.markerClusterGroup();
+let rainCluster = L.markerClusterGroup();
+let snowCluster = L.markerClusterGroup();
+let cloudyCluster = L.markerClusterGroup();
+let otherCluster = L.markerClusterGroup();
 
-  // Creating our initial map object:
-  // Initialize all the LayerGroups that we'll use.
-  let layers = {
-    CLEAR: new L.LayerGroup(),
-    RAIN: new L.LayerGroup(),
-    SNOW: new L.LayerGroup(),
-    CLOUDY: new L.LayerGroup(),
-    OTHER: new L.LayerGroup()
-  };
-
-  // Create a Leaflet map and set its center and zoom level.
+// Create a Leaflet map and set its center and zoom level.
   const myMap = L.map('map', {
     center: [37.0902, -95.7129],
     zoom: 5,
+    maxZoom: 18, // Add the maxZoom property
     layers: [
-      layers.CLEAR,
-      layers.RAIN,
-      layers.SNOW,
-      layers.CLOUDY,
-      layers.OTHER
+      clearCluster,
+      rainCluster,
+      snowCluster,
+      cloudyCluster,
+      otherCluster
     ]
   });
 
@@ -27,13 +25,14 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(myMap);
 
+
   // Create an overlays object to add to the layer control.
   let overlays = {
-    "Clear": layers.CLEAR,
-    "Rain": layers.RAIN,
-    "Snow": layers.SNOW,
-    "Cloudy": layers.CLOUDY,
-    "Other": layers.OTHER
+    "Clear": clearCluster,
+    "Rain": rainCluster,
+    "Snow": snowCluster,
+    "Cloudy": cloudyCluster,
+    "Other": otherCluster
   };
 
   // Create a control for our layers, and add our overlays to it.
@@ -63,12 +62,12 @@ let icons = {
   RAIN: L.ExtraMarkers.icon({
     icon: "ion-umbrella",
     iconColor: "white",
-    markerColor: "blue"
+    markerColor: "green"
   }),
   SNOW: L.ExtraMarkers.icon({
-    icon: "ion-snow",
+    icon: "ion-snow-outline",
     iconColor: "white",
-    markerColor: "pink"
+    markerColor: "blue"
   }),
   CLOUDY: L.ExtraMarkers.icon({
     icon: "ion-cloud",
@@ -77,15 +76,25 @@ let icons = {
   }),
   OTHER: L.ExtraMarkers.icon({
     iconColor: "white",
-    markerColor: "grey"
+    markerColor: "black"
   })
 };
 
-// L.marker([32.3182, -86.9023]).addTo(myMap);
+// Initialize an array to hold all the marker cluster groups
+let markerClusters = [clearCluster, rainCluster, snowCluster, cloudyCluster, otherCluster];
 
-function createWeatherMap(value) {
+// Function to clear existing marker clusters and reset weatherCount object
+function clearMap() {
+  // Remove all marker clusters from the map
+  markerClusters.forEach(cluster => myMap.removeLayer(cluster));
+  // Clear the marker clusters
+  clearCluster.clearLayers();
+  rainCluster.clearLayers();
+  snowCluster.clearLayers();
+  cloudyCluster.clearLayers();
+  otherCluster.clearLayers();
 
-  // create an object to keep the number of markers in each layer.
+  // Reset the weatherCount object
   let weatherCount = {
     CLEAR: 0,
     RAIN: 0,
@@ -93,23 +102,35 @@ function createWeatherMap(value) {
     CLOUDY: 0,
     OTHER: 0
   };
-  // Initialize weatherStatusCode, which will be used as a key to access the appropriate layers, icons, and weather count for the layer group.
-  let weatherStatusCode;
-  let stateOutput = [];
 
+  // Update the legend with the reset weatherCount
+  updateLegend(weatherCount);
+}
+
+function createWeatherMap(value) {
+  clearMap();
+
+  // Fetch weather data using promises
   const url2 = "http://127.0.0.1:5000/api/v1.0/weather_conditions";
+  fetch(url2)
+    .then(response => response.json())
+    .then(data => {
+      let weatherCount = {
+        CLEAR: 0,
+        RAIN: 0,
+        SNOW: 0,
+        CLOUDY: 0,
+        OTHER: 0
+      };
+      let stateOutput = [];
+      let bounds = [];
 
-  d3.json(url2).then(function(responseData) {
-        data = responseData; 
-  // });
-
-
-  for (let k = 0; k < data.length; k++) {
-    let row = data[k];
-    if (row.state == value) {
-      stateOutput.push(row);
-    }
-  }
+      for (let k = 0; k < data.length; k++) {
+        let row = data[k];
+        if (row.state == value) {
+          stateOutput.push(row);
+        }
+      }
 
   // Loop through the stations (they're the same size and have partially matching data).
   for (let i = 0; i < stateOutput.length; i++) {
@@ -142,19 +163,45 @@ function createWeatherMap(value) {
     let newMarker = L.marker([stateOutput[i].lat, stateOutput[i].lon], {
       icon: icons[weatherStatusCode]
     });
-    
+
     let popupContent = `<b>State:</b> ${stateOutput[i].state}<br><b>Weather:</b> ${stateOutput[i].weather_condition}<br>`;
-  
+
     newMarker.bindPopup(popupContent);
-  
-    newMarker.bindPopup(popupContent);
-  
-    newMarker.addTo(layers[weatherStatusCode]);
+
+    // Add the marker to the appropriate weather layer group based on the weatherStatusCode
+    if (weatherStatusCode === "CLEAR") {
+      clearCluster.addLayer(newMarker);
+    } else if (weatherStatusCode === "RAIN") {
+      rainCluster.addLayer(newMarker);
+    } else if (weatherStatusCode === "SNOW") {
+      snowCluster.addLayer(newMarker);
+    } else if (weatherStatusCode === "CLOUDY") {
+      cloudyCluster.addLayer(newMarker);
+    } else {
+      otherCluster.addLayer(newMarker);
+    }
+
+    bounds.push([stateOutput[i].lat, stateOutput[i].lon]);
   }
+
+  // Add the markerCluster groups for each weather layer to the map
+  myMap.addLayer(clearCluster);
+  myMap.addLayer(rainCluster);
+  myMap.addLayer(snowCluster);
+  myMap.addLayer(cloudyCluster);
+  myMap.addLayer(otherCluster);
+
   // Update the legend
   updateLegend(weatherCount);
-})};
 
+  myMap.fitBounds(bounds, {
+    padding: [20, 20]
+  });
+})
+.catch(error => {
+  console.error("Error fetching weather data:", error);
+});
+}
 
 function updateLegend(weatherCount) {
   document.querySelector(".legend").innerHTML = [
@@ -166,8 +213,16 @@ function updateLegend(weatherCount) {
   ].join("");
 }
 
-function init(){
-  createWeatherMap("Alabama")
-};
+// Add an event listener to the dropdown menu to detect state selection changes
+const stateDropdown = document.getElementById("selDataset1"); // Replace "selDataset1" with the actual ID of your dropdown menu
+stateDropdown.addEventListener("change", function () {
+  const selectedState = stateDropdown.value;
+  createWeatherMap(selectedState);
+});
+
+// Call the createWeatherMap function to display markers for Alabama initially
+function init() {
+  createWeatherMap("Alabama");
+}
 
 init();
