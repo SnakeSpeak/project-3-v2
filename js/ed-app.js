@@ -50,7 +50,7 @@ function createLightingBarGraph(state) {
             yaxis:{
                 title: 'Count'
             },
-            width: 550,
+            width: 450,
             height: 400
         };
         //plot it out

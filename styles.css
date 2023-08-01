@@ -42,3 +42,12 @@
     bottom: 0;
     left: 0;
 }
+
+body {
+  font-family: "Times New Roman", sans-serif;
+}
+
+#popEst {
+  font-size: 24px; /* Adjust the font size as needed */
+  font-weight: bold;
+}
