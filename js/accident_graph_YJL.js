@@ -1,28 +1,34 @@
+// Defining the URL for the API
 let url = "http://127.0.0.1:5000/api/v1.0/accident_type"
 
-
+// Creating function to extract and graph data
 function graph(data,value){
+  // Creating empty lists
   let output = []
-  let test_type = []
-  let test_count = []
+  let type_list = []
+  let accident_count = []
 
+  // For loop to extract accident type data 
   for (let i=0;i<data.length;i++){
+    // Defining rows
     let row = data[i]
 
+    // Conditional based on state selection
     if (row.state == value){
+      // Push the data for the selected date to the output list
       output.push(row)
     }
   }
 
+  // Define hashMap
   let hashMap = {}
 
+  // Create a map object to count the number of each accident type
   output.map(element => {
-// if the key(name) is inserted in our hashmap, just increment the count
-// if the key isn't present, then just assign the count of that key(name) as 1 and increment next time onwards
   hashMap[element.accident_type] = hashMap[element.accident_type] + 1 || 1;
   });
 
-// our count for each name is ready...just getting the result ready in our desired format
+  // Create a new object holding the accident type with their counts
   let aggregatedData =
   Object.keys(hashMap).map(element =>
   ({
@@ -31,27 +37,33 @@ function graph(data,value){
   })
 )
 
+  // Sort aggregateData by accident type counts in descending order
   let new_data = aggregatedData.sort(function(a,b){return b.count - a.count})
 
+  // Loop through the sorted data for only the first 10 accident types
   for (let a=0; a<10; a++){
-    bob = new_data[a]
+    // Define the row in the new data
+    sorted_row = new_data[a]
 
-    let type = bob.accident_type
-    let type_count = bob.count
+    // Define the accident type and accident type counts
+    let type = sorted_row.accident_type
+    let type_count = sorted_row.count
 
-    test_type.push(type)
-    test_count.push(type_count)
+    // Push the accident type and accident type count to the corresponding list
+    type_list.push(type)
+    accident_count.push(type_count)
   }
 
   
-
-  bar_plot(test_type, test_count, value)
+  // Call bar_plot function to graph output values
+  bar_plot(type_list, accident_count)
 
 
 }
 
-
-function bar_plot(x_value, y_value, state){
+// Create function to graph the bar plot
+function bar_plot(x_value, y_value){
+  // Defining plot values
   let bar_plot = [{
       x: x_value,
       y: y_value,
@@ -59,6 +71,7 @@ function bar_plot(x_value, y_value, state){
       type: "bar"
   }];
 
+  // Defining plot layout values
   let bar_layout = {
       xaxis: {
         title: 'Accident Type',
@@ -72,15 +85,16 @@ function bar_plot(x_value, y_value, state){
       height: 400
   };
 
+  // Plot the bar graph
   Plotly.newPlot("accident", bar_plot, bar_layout);
 };
 
-
+// Create initiation function
 function init(){
     // Fetching JSON data
     d3.json(url).then(function(data){ 
 
-        // Call data extraction/graphing function for first ID
+        // Call data extraction/graphing function for first state
         graph(data, "Alabama")
 
     });
@@ -110,4 +124,5 @@ function getData(){
 
 }
 
+// Call initiation function
 init();

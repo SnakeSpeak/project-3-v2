@@ -1,4 +1,4 @@
-# Import the dependencies.
+# Import the dependencies
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -18,6 +18,7 @@ Base = automap_base()
 # reflect the tables
 Base.prepare(autoload_with=engine)
 
+# Defining accident and population
 accident = Base.classes.accidents
 population = Base.classes.population
 
@@ -26,6 +27,7 @@ population = Base.classes.population
 ################################################
 app = Flask(__name__) 
 
+# Setting CORS support_credentials to True
 CORS(app, support_credentials=True)
 
 #################################################
@@ -48,16 +50,16 @@ def welcome():
 # Route for lighting conditions
 @app.route("/api/v1.0/lighting_conditions")
 def lighting():
+    # Open session
     session = Session(engine)
 
-    # Query returning date and precipitation date from measurement table
-    # Filtered for date occuring on and after query date  
+    # Query returning state, latitude, longitude and lighting conditions from the accidents table
     lighting_results = session.query(accident.STATENAME, accident.LATITUDE, accident.LONGITUD, accident.LGT_CONDNAME).all()
         
     # Close session
     session.close
 
-    # Open empty precipitation list to record output
+    # Open empty lighting list to record output
     lighting = []
 
     # For loop through the query results
@@ -71,25 +73,26 @@ def lighting():
         light_dict["lon"] = LONGITUD
         light_dict["lighting_condition"] = LGT_CONDNAME
 
-        # Append dictionary to precipitation list
+        # Append dictionary to lighting list
         lighting.append(light_dict)
     
     # Jsonify the output
     return jsonify(lighting)
     
 
+# Route for weather conditions
 @app.route("/api/v1.0/weather_conditions")
 def weather():
+    # Open session
     session = Session(engine)
 
-    # Query returning date and precipitation date from measurement table
-    # Filtered for date occuring on and after query date  
+    # Query returning state, latitude, longitude and weather conditions from the accidents table
     weather_results = session.query(accident.STATENAME, accident.LATITUDE, accident.LONGITUD, accident.WEATHERNAME).all()
         
     # Close session
     session.close
 
-    # Open empty precipitation list to record output
+    # Open empty weather list to record output
     weather = []
 
     # For loop through the query results
@@ -103,25 +106,26 @@ def weather():
         weather_dict["lon"] = LONGITUD
         weather_dict["weather_condition"] = WEATHERNAME
 
-        # Append dictionary to precipitation list
+        # Append dictionary to weather list
         weather.append(weather_dict)
     
     # Jsonify the output
     return jsonify(weather)
 
 
+# Route for accident types
 @app.route("/api/v1.0/accident_type")
 def accident_call():
+    # Open session
     session = Session(engine)
 
-    # Query returning date and precipitation date from measurement table
-    # Filtered for date occuring on and after query date  
+    # Query returning state, latitude, longitude and accident type from the accidents table  
     accident_results = session.query(accident.STATENAME, accident.LATITUDE, accident.LONGITUD, accident.HARM_EVNAME).all()
         
     # Close session
     session.close
 
-    # Open empty precipitation list to record output
+    # Open empty accident list to record output
     accident_list = []
 
     # For loop through the query results
@@ -135,26 +139,26 @@ def accident_call():
         accident_dict["lon"] = LONGITUD
         accident_dict["accident_type"] = HARM_EVNAME
 
-        # Append dictionary to precipitation list
+        # Append dictionary to accident list
         accident_list.append(accident_dict)
     
     # Jsonify the output
     return jsonify(accident_list)
 
 
-
+# Route for population
 @app.route("/api/v1.0/population")
 def population_call():
+    # Open session
     session = Session(engine)
 
-    # Query returning date and precipitation date from measurement table
-    # Filtered for date occuring on and after query date  
+    # Query returning state and 2021 population estimate from population table
     population_results = session.query(population.NAME, population.POPESTIMATE2021).all()
         
     # Close session
     session.close
 
-    # Open empty precipitation list to record output
+    # Open empty population list to record output
     population_list = []
 
     # For loop through the query results
@@ -166,7 +170,7 @@ def population_call():
         population_dict["state"] = NAME
         population_dict["population"] = POPESTIMATE2021
 
-        # Append dictionary to precipitation list
+        # Append dictionary to population list
         population_list.append(population_dict)
     
     # Jsonify the output
