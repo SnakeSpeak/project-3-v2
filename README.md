@@ -1,5 +1,14 @@
 # Project 3
-Project 3 of UCI Bootcamp. Team consists of: Logan Barnes, Jessie Lee, and Edmond Magpantay
+<b>Project 3 of UCI Bootcamp</b></br>
+By: Logan Barnes, Jessie Lee, and Edmond Magpantay</br>
+
+<b>Analyze the Fatality Analysis Reporting System Data from the year 2021 to analyze automotive accidents, along with details at the time:</b></br>
+<ul>
+<li>Weather Conditions</li>
+<li>Accident Types</li>
+<li>Lighting Conditions</li>
+</ul>
+
 
 
 <b>Resources used:</b></br>
