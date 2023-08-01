@@ -15,9 +15,11 @@ function displayPop(state) {
         const popEstElement = document.getElementById('popEst');
         const stateNameElement = document.getElementById('stateName');
         const stateName2Element = document.getElementById('stateName2');
+        const stateName3Element = document.getElementById('stateName3')
         popEstElement.textContent = statePop.toLocaleString();
         stateNameElement.textContent = name.toLocaleString();
         stateName2Element.textContent = name.toLocaleString();
+        stateName3Element.textContent = name.toLocaleString();
     })
 }
 
